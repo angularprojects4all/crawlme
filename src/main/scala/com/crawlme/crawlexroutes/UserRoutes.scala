@@ -21,7 +21,7 @@ object WebServer {
         pathSingleSlash {
           complete("HELOO WORLD")
         } ~
-          path("api/crawl") {
+          path("api" / "crawl") {
             complete("you just tried crawling sites here.. TBD")
           }
       }

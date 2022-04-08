@@ -3,14 +3,17 @@ package com.crawlme.crawlexservice
 import java.net.URL
 import java.io.InputStreamReader
 import java.io.BufferedReader
+import akka.actor.Actor
+import scala.concurrent.ExecutionContext.Implicits._
+import scala.concurrent._
 
-case class Site(url: String = "", canonicalUrl: String)
+case class Site(canonicalUrl: String)
 case class Bulk(canonicals: List[String])
 case class ResultObj(url: String, data: String)
 case class Error(error: String)
 case class FinalResult(result:List[ResultObj], error:Option[Error])
 
-object StandaloneFetcher extends App {
+object StandaloneFetcher extends Actor {
 	val urls = List("https://google.com", "https://github.com")
 	
 	override def receive = {
@@ -23,18 +26,14 @@ object StandaloneFetcher extends App {
 		
 		case r: Bulk => {
 			//dont throw raw data to front end,, need to send as json with result = list(url,data)
-			r.flatMap(self ! Site(_))
+			r.canonicals.foreach(self ! Site(_))
 		}
 	}
 
 	def getContents(canonicalUrl:String): Either[Exception, String] = {
-		val inputstream = new URL(canonicalUrl.trim).openConnection.getInputStream	
+		val inputStream = new URL(canonicalUrl.trim).openConnection.getInputStream	
 		val br = new BufferedReader(new InputStreamReader(inputStream))
-		Future(fetchMeString(br, "")) map {
-			case x => Right(x) 
-		} recoverWith {
-			case ex: Exception => println("!!! caught something here"); Left(ex)
-		}
+		Right(fetchMeString(br))
 	}
 
 	def fetchMeString(br:BufferedReader, targetString: String = ""): String = Option(br.readLine) match {

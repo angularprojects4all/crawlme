@@ -1,0 +1,1 @@
+{"name":"sbt","version":"1.6.2","bspVersion":"2.0.0-M5","languages":["scala"],"argv":["C:\\Program Files\\Java\\jre1.8.0_251/bin/java","-Xms100m","-Xmx100m","-classpath","C:\\sbt\\bin\\sbt-launch.jar","-Dsbt.script=C:/sbt/bin/sbt","xsbt.boot.Boot","-bsp"]}
