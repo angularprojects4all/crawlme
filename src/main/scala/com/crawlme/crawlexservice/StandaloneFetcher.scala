@@ -13,8 +13,7 @@ case class ResultObj(url: String, data: String)
 case class Error(error: String)
 case class FinalResult(result:List[ResultObj], error:Option[Error])
 
-object StandaloneFetcher extends Actor {
-	val urls = List("https://google.com", "https://github.com")
+class StandaloneFetcher extends Actor {
 	
 	override def receive = {
 		case r: Site => {
@@ -30,14 +29,17 @@ object StandaloneFetcher extends Actor {
 		}
 	}
 
-	def getContents(canonicalUrl:String): Either[Exception, String] = {
+	def firstReadFromRedis(cUrl: String) = ???
+
+	def getContents(canonicalUrl:String, isTrailUser: Boolean = true): Either[Exception, String] = {
 		val inputStream = new URL(canonicalUrl.trim).openConnection.getInputStream	
 		val br = new BufferedReader(new InputStreamReader(inputStream))
-		Right(fetchMeString(br))
+		Right(fetchMeString(br, isTrailUser))
 	}
 
-	def fetchMeString(br:BufferedReader, targetString: String = ""): String = Option(br.readLine) match {
-		case Some(currentLine) => fetchMeString(br, targetString + currentLine)
-		case _ => targetString
+	def fetchMeString(br:BufferedReader, isTrailUser: Boolean = true, targetString: String = ""): String =  
+				Option(br.readLine) match {
+					case Some(currentLine) => fetchMeString(br, isTrailUser, targetString + currentLine)
+					case _ => targetString
 	}
 }
