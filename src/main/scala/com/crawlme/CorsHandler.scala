@@ -1,4 +1,4 @@
-package com.crawlme.crawlexservice
+package com.crawlme
 import akka.http.scaladsl.model.HttpMethods._
 import akka.http.scaladsl.model.headers._
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
@@ -9,11 +9,6 @@ import akka.http.scaladsl.server.{Directive0, Route}
 import scala.concurrent.duration._
 
 
-/**
-  * From https://dzone.com/articles/handling-cors-in-akka-http
-  *
-  *
-  */
 trait CORSHandler {
 
   private val corsResponseHeaders = List(

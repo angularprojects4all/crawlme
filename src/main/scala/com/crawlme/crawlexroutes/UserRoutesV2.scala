@@ -1,4 +1,4 @@
-package com.crawlme.crawlexroutes
+/*package com.crawlme.crawlexroutes
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -10,7 +10,6 @@ import akka.actor._
 import akka.actor.Props
 import com.crawlme.crawlexservice.StandaloneFetcher
 import com.crawlme.crawlexservice._
-import com.crawlme.CORSHandler
 import akka.pattern.ask
 import scala.concurrent.ExecutionContext.Implicits
 import akka.util.Timeout
@@ -18,10 +17,7 @@ import scala.concurrent.duration._
 import scala.concurrent._
 import com.crawlme.crawlexformats.JsonFormats._
 import com.crawlme.crawlexformats.Models._
-import spray.json._
 object WebServer {
-
-  private val cors = new CORSHandler {}
   def main(args: Array[String]) {
     implicit val system = ActorSystem("teamextn")
     implicit val materializer = ActorMaterializer()
@@ -38,9 +34,8 @@ object WebServer {
           complete("HELOO WORLD")
         } ~
           path("api" / "crawl") {
-		cors.corsHandler(complete((for {
-			resp <- ((fetcherActor ? Site(urls.tail.head)).mapTo[FinalResult])
-		} yield (resp.toJson.prettyPrint)).recoverWith{ case ex => Future("ssss")}))
+            complete(((fetcherActor ? Site(urls.tail.head)).mapTo[FinalResult]).toString)
+		//need to remove nasty awaits, self-note:TODO
           }
       }
     // `route` will be implicitly converted to `Flow` using `RouteResult.route2HandlerFlow`
@@ -52,3 +47,4 @@ object WebServer {
       .onComplete(_ => system.terminate()) // and shutdown when done
   }
 }
+*/
